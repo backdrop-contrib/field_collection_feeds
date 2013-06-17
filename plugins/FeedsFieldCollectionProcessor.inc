@@ -73,6 +73,8 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
         $field_collection_item->item_id = $data ? key($data) : FALSE;
         if (!empty($field_collection_item->item_id)) {
           $field_collection_item->is_new = NULL;
+		  $old_field_collection_item = field_collection_item_load($field_collection_item->item_id);
+		  $field_collection_item->revision_id = $old_field_collection_item->revision_id;
           $skip_host_save = TRUE;
         }
         //drupal_set_message('123:'.$field_collection_item->item_id);
