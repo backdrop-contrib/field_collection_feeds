@@ -52,25 +52,33 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
    * Save a entity.
    */
   public function entitysave($entity) {
+
     $values = (array)$entity;
     $skip_host_save = FALSE;
     $field_collection_item = entity_create('field_collection_item', $values);
+	  
     if (!empty($entity->hostEntityId)) {
       $hostEntity_array = entity_load($this->config['host_entity_type'], array($entity->hostEntityId));
       $hostEntity = reset($hostEntity_array);
       $field_collection_item->setHostEntity($this->config['host_entity_type'], $hostEntity);
       //update by set item_id
+	 
       if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING && isset($field_collection_item->identifier_field) && isset($this->config['identifier_field_name'])) {
-        $query = new EntityFieldQuery();
+       
+	   $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'field_collection_item');
         $query->entityCondition('bundle', $this->config['field_name']);
         $items  = isset($hostEntity->{$this->config['field_name']}[LANGUAGE_NONE]) ? $hostEntity->{$this->config['field_name']}[LANGUAGE_NONE] : array();
         $ids = field_collection_field_item_to_ids($items);
-        $query->entityCondition('entity_id', $ids, 'IN');
-        $query->fieldCondition($this->config['identifier_field_name'], 'value', $field_collection_item->identifier_field);
-        $result = $query->execute();
-        list($EntityType, $data) = each($result);
-        $field_collection_item->item_id = $data ? key($data) : FALSE;
+		if(!empty($ids)){
+          $query->entityCondition('entity_id', $ids, 'IN');
+		
+          $query->fieldCondition($this->config['identifier_field_name'], 'value', $field_collection_item->identifier_field);
+          $result = $query->execute();
+		
+          list($EntityType, $data) = each($result);
+          $field_collection_item->item_id = $data ? key($data) : FALSE;
+		}
         if (!empty($field_collection_item->item_id)) {
           $field_collection_item->is_new = NULL;
 		  $old_field_collection_item = field_collection_item_load($field_collection_item->item_id);
@@ -79,8 +87,10 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
         }
         //drupal_set_message('123:'.$field_collection_item->item_id);
       }
+	  
 
     }
+	
     $field_collection_item->save($skip_host_save);
   }
 
