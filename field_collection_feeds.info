@@ -1,7 +1,8 @@
 name = Field Collection Feeds
 description = Provides feeds integration for field collection.
-core = 7.x
+backdrop = 1.x
+type = module
 package = Feeds
+
 dependencies[] = field_collection
 dependencies[] = feeds
-files[] = plugins/FeedsFieldCollectionProcessor.inc

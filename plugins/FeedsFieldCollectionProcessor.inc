@@ -14,7 +14,7 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
   public function entityType() {
     return 'field_collection_item';
   }
-  
+
   /**
    * Implements parent::entityInfo().
    */
@@ -56,15 +56,15 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
     $values = (array)$entity;
     $skip_host_save = FALSE;
     $field_collection_item = entity_create('field_collection_item', $values);
-	  
+
     if (!empty($entity->hostEntityId)) {
       $hostEntity_array = entity_load($this->config['host_entity_type'], array($entity->hostEntityId));
       $hostEntity = reset($hostEntity_array);
       $field_collection_item->setHostEntity($this->config['host_entity_type'], $hostEntity);
       //update by set item_id
-	 
+
       if ($this->config['update_existing'] == FEEDS_UPDATE_EXISTING && isset($field_collection_item->identifier_field) && isset($this->config['identifier_field_name'])) {
-       
+
 	   $query = new EntityFieldQuery();
         $query->entityCondition('entity_type', 'field_collection_item');
         $query->entityCondition('bundle', $this->config['field_name']);
@@ -72,25 +72,24 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
         $ids = field_collection_field_item_to_ids($items);
 		if(!empty($ids)){
           $query->entityCondition('entity_id', $ids, 'IN');
-		
+
           $query->fieldCondition($this->config['identifier_field_name'], 'value', $field_collection_item->identifier_field);
           $result = $query->execute();
-		
+
           list($EntityType, $data) = each($result);
           $field_collection_item->item_id = $data ? key($data) : FALSE;
 		}
         if (!empty($field_collection_item->item_id)) {
           $field_collection_item->is_new = NULL;
-		  $old_field_collection_item = field_collection_item_load($field_collection_item->item_id);
-		  $field_collection_item->revision_id = $old_field_collection_item->revision_id;
+          $old_field_collection_item = field_collection_item_load($field_collection_item->item_id);
+          $field_collection_item->revision_id = $old_field_collection_item->revision_id;
           $skip_host_save = TRUE;
         }
-        //drupal_set_message('123:'.$field_collection_item->item_id);
       }
-	  
+
 
     }
-	
+
     $field_collection_item->save($skip_host_save);
   }
 
@@ -167,7 +166,7 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
    */
   //public function setTargetElement(FeedsSource $source, $target_item, $target_element, $value, $mapping) {
   public function setTargetElement(FeedsSource $source, $target_item, $target_element, $value) {
-    
+
     switch ($target_element) {
       case 'host_entity_guid':
         $query = new EntityFieldQuery();
@@ -215,7 +214,7 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
 
     $targets['item_id'] = array(
       'name' => t('Item ID'),
-      'description' => t('The item id of the field collection. NOTE: use this feature with care, field collection item ids are usually assigned by Drupal.'),
+      'description' => t('The item id of the field collection. NOTE: use this feature with care, field collection item ids are usually assigned by Backdrop.'),
       'optional_unique' => TRUE,
     );
 
@@ -223,7 +222,7 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
     self::loadMappers();
     $entity_type = $this->entityType();
     $bundle = $this->config['field_name'];
-    drupal_alter('feeds_processor_targets', $targets, $entity_type, $bundle);
+    backdrop_alter('feeds_processor_targets', $targets, $entity_type, $bundle);
 
     return $targets;
   }
