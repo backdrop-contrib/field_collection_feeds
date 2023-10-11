@@ -161,7 +161,7 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
           }
           $result = $query->execute();
           if(!empty($result)) {
-            list(, $data) = each($result);
+            $data = current($result);
             $entity_id = key($data);
           }
         }
