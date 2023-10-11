@@ -76,7 +76,7 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
           $query->fieldCondition($this->config['identifier_field_name'], 'value', $field_collection_item->identifier_field);
           $result = $query->execute();
 
-          list($EntityType, $data) = each($result);
+          $data = current($result);
           $field_collection_item->item_id = $data ? key($data) : FALSE;
 		}
         if (!empty($field_collection_item->item_id)) {
@@ -178,7 +178,7 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
           $query->propertyCondition($this->config['guid_field_name'], $value);
         }
         $result = $query->execute();
-        list($hostEntityType, $data) = each($result);
+        $data = current($result);
         $target_item->hostEntityId = $data ? key($data) : FALSE;
         break;
       default:
