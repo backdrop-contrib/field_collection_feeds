@@ -27,7 +27,7 @@ function field_collection_feeds_feeds_plugins() {
         'parent' => 'FeedsProcessor',
         'class' => 'FeedsFieldCollectionProcessor',
         'file' => 'FeedsFieldCollectionProcessor.inc',
-        'path' => backdrop_get_path('module', 'field_collection_feeds'),
+        'path' => backdrop_get_path('module', 'field_collection_feeds') . '/plugins',
       ),
     ),
   );
