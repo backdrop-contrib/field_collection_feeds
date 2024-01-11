@@ -38,7 +38,7 @@ class FeedsFieldCollectionProcessor extends FeedsProcessor {
    *
    */
   protected function entityLoad(FeedsSource $source, $id) {
-    return entity_load_single($this->entityType(), $id);
+    return entity_load($this->entityType(), $id);
   }
 
   /**
